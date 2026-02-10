@@ -15,6 +15,7 @@ import {
   Quote
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import confetti from 'canvas-confetti';
 
 // --- Global Theme ---
 const theme = {
@@ -109,111 +110,136 @@ function App() {
 
       {/* --- Main Content --- */}
       <main className="canvas custom-scrollbar">
-        <div className="grid-layout">
-          {/* Welcome Header */}
-          <div style={{ gridColumn: 'span 3', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <SectionHeader title="Operations Overview" desc="Real-time synchronized data from global intelligence nodes." />
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <div className="premium-card" style={{ padding: '12px 20px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Activity size={16} color={theme.success} />
-                <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>SYSTEM: OPTIMAL</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Crypto Intelligence */}
-          <PremiumCard title="Market Intelligence" icon={TrendingUp} span={2}>
-            <div style={{ display: 'flex', gap: '48px', alignItems: 'center' }}>
-              {cryptoData ? (
-                <>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <span className="badge badge-primary">BTC/USD</span>
-                      <ArrowUpRight size={14} color={theme.textDim} />
-                    </div>
-                    <div className="stat-value outfit">${cryptoData.bitcoin.usd.toLocaleString()}</div>
-                    <p style={{ color: cryptoData.bitcoin.usd_24h_change > 0 ? '#4ade80' : '#f87171', fontSize: '0.85rem', marginTop: '4px' }}>
-                      {cryptoData.bitcoin.usd_24h_change > 0 ? '+' : ''}{cryptoData.bitcoin.usd_24h_change.toFixed(2)}% (24h)
-                    </p>
-                  </div>
-                  <div style={{ width: '1px', height: '80px', background: 'var(--border-subtle)' }}></div>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <span className="badge badge-primary">ETH/USD</span>
-                      <ArrowUpRight size={14} color={theme.textDim} />
-                    </div>
-                    <div className="stat-value outfit">${cryptoData.ethereum.usd.toLocaleString()}</div>
-                    <p style={{ color: cryptoData.ethereum.usd_24h_change > 0 ? '#4ade80' : '#f87171', fontSize: '0.85rem', marginTop: '4px' }}>
-                      {cryptoData.ethereum.usd_24h_change > 0 ? '+' : ''}{cryptoData.ethereum.usd_24h_change.toFixed(2)}% (24h)
-                    </p>
-                  </div>
-                </>
-              ) : <div className="dim-text">Synchronizing with global exchanges...</div>}
-            </div>
-          </PremiumCard>
-
-          {/* System Info */}
-          <PremiumCard title="Core Engine" icon={Cpu} span={1}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div>
-                <p style={{ fontSize: '0.8rem', color: theme.textDim, marginBottom: '4px' }}>Processing Power</p>
-                <div style={{ height: '4px', width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
-                  <motion.div initial={{ width: 0 }} animate={{ width: '84%' }} transition={{ duration: 1.5 }} style={{ height: '100%', background: theme.accent }} />
+        {activeTab === 'dashboard' && (
+          <div className="grid-layout">
+            {/* Welcome Header */}
+            <div style={{ gridColumn: 'span 3', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <SectionHeader title="Operations Overview" desc="Real-time synchronized data from global intelligence nodes." />
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div className="premium-card" style={{ padding: '12px 20px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Activity size={16} color={theme.success} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>SYSTEM: OPTIMAL</span>
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.85rem' }}>Active Nodes</span>
-                <span className="accent-text" style={{ fontWeight: 700 }}>1,248</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.85rem' }}>Uptime</span>
-                <span style={{ color: theme.success, fontWeight: 700 }}>99.999%</span>
-              </div>
             </div>
-          </PremiumCard>
 
-          {/* NASA Intel - Full Height */}
-          <PremiumCard title="Cosmic Feed" icon={Telescope} span={1}>
-            {nasaData ? (
-              <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <img src={nasaData.url} className="nasa-hero" alt="NASA" />
-                <h4 className="outfit" style={{ fontSize: '1.1rem', marginBottom: '8px' }}>{nasaData.title}</h4>
-                <p style={{ fontSize: '0.8rem', color: theme.textDim, lineBreak: 'anywhere', height: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  {nasaData.explanation}
-                </p>
-                <button className="btn-action" style={{ width: '100%', marginTop: 'auto' }}>Open Mission Log</button>
+            {/* Crypto Intelligence */}
+            <PremiumCard title="Market Intelligence" icon={TrendingUp} span={2}>
+              <div style={{ display: 'flex', gap: '48px', alignItems: 'center' }}>
+                {cryptoData ? (
+                  <>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <span className="badge badge-primary">BTC/USD</span>
+                        <ArrowUpRight size={14} color={theme.textDim} />
+                      </div>
+                      <div className="stat-value outfit">${cryptoData.bitcoin.usd.toLocaleString()}</div>
+                      <p style={{ color: cryptoData.bitcoin.usd_24h_change > 0 ? '#4ade80' : '#f87171', fontSize: '0.85rem', marginTop: '4px' }}>
+                        {cryptoData.bitcoin.usd_24h_change > 0 ? '+' : ''}{cryptoData.bitcoin.usd_24h_change.toFixed(2)}% (24h)
+                      </p>
+                    </div>
+                    <div style={{ width: '1px', height: '80px', background: 'var(--border-subtle)' }}></div>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <span className="badge badge-primary">ETH/USD</span>
+                        <ArrowUpRight size={14} color={theme.textDim} />
+                      </div>
+                      <div className="stat-value outfit">${cryptoData.ethereum.usd.toLocaleString()}</div>
+                      <p style={{ color: cryptoData.ethereum.usd_24h_change > 0 ? '#4ade80' : '#f87171', fontSize: '0.85rem', marginTop: '4px' }}>
+                        {cryptoData.ethereum.usd_24h_change > 0 ? '+' : ''}{cryptoData.ethereum.usd_24h_change.toFixed(2)}% (24h)
+                      </p>
+                    </div>
+                  </>
+                ) : <div className="dim-text">Synchronizing with global exchanges...</div>}
               </div>
-            ) : <div className="dim-text">Establishing satellite connection...</div>}
-          </PremiumCard>
+            </PremiumCard>
 
-          {/* Daily Advice / Quote */}
-          <PremiumCard title="Strategic Insight" icon={ShieldCheck} span={2}>
-            {quoteData ? (
-              <div style={{ padding: '20px 0' }}>
-                <Quote size={40} color="rgba(79, 70, 229, 0.2)" style={{ position: 'absolute', top: '20px', left: '20px' }} />
-                <p className="outfit" style={{ fontSize: '1.4rem', fontWeight: 500, lineHeight: 1.4, position: 'relative', zIndex: 1 }}>
-                  "{quoteData.content}"
-                </p>
-                <p style={{ marginTop: '20px', color: theme.accent, fontWeight: 700, textAlign: 'right' }}>
-                  — PROTOCAL {quoteData.author.toUpperCase()}
-                </p>
+            {/* System Info */}
+            <PremiumCard title="Core Engine" icon={Cpu} span={1}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <p style={{ fontSize: '0.8rem', color: theme.textDim, marginBottom: '4px' }}>Processing Power</p>
+                  <div style={{ height: '4px', width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                    <motion.div initial={{ width: 0 }} animate={{ width: '84%' }} transition={{ duration: 1.5 }} style={{ height: '100%', background: theme.accent }} />
+                  </div>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.85rem' }}>Active Nodes</span>
+                  <span className="accent-text" style={{ fontWeight: 700 }}>1,248</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '0.85rem' }}>Uptime</span>
+                  <span style={{ color: theme.success, fontWeight: 700 }}>99.999%</span>
+                </div>
               </div>
-            ) : <div className="dim-text">Generating daily heuristic...</div>}
-          </PremiumCard>
+            </PremiumCard>
 
-          {/* Quick Actions */}
-          <div style={{ gridColumn: 'span 3', marginTop: '12px' }}>
-            <SectionHeader title="Development Protocols" desc="Access advanced tooling and deployment routines." />
-            <div style={{ display: 'flex', gap: '16px' }}>
-              {['System Scan', 'Node Reboot', 'Deploy V3', 'Security Audit'].map(action => (
-                <button key={action} className="btn-action" style={{ flex: 1, padding: '16px', borderRadius: '16px', fontSize: '0.9rem', fontWeight: 600 }}>
-                  {action}
-                </button>
-              ))}
+            {/* NASA Intel - Full Height */}
+            <PremiumCard title="Cosmic Feed" icon={Telescope} span={1}>
+              {nasaData ? (
+                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <img src={nasaData.url} className="nasa-hero" alt="NASA" />
+                  <h4 className="outfit" style={{ fontSize: '1.1rem', marginBottom: '8px' }}>{nasaData.title}</h4>
+                  <p style={{ fontSize: '0.8rem', color: theme.textDim, lineBreak: 'anywhere', height: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {nasaData.explanation}
+                  </p>
+                  <button className="btn-action" style={{ width: '100%', marginTop: 'auto' }} onClick={() => window.open(nasaData.url, '_blank')}>Open Mission Log</button>
+                </div>
+              ) : <div className="dim-text">Establishing satellite connection...</div>}
+            </PremiumCard>
+
+            {/* Daily Advice / Quote */}
+            <PremiumCard title="Strategic Insight" icon={ShieldCheck} span={2}>
+              {quoteData ? (
+                <div style={{ padding: '20px 0' }}>
+                  <Quote size={40} color="rgba(79, 70, 229, 0.2)" style={{ position: 'absolute', top: '20px', left: '20px' }} />
+                  <p className="outfit" style={{ fontSize: '1.4rem', fontWeight: 500, lineHeight: 1.4, position: 'relative', zIndex: 1 }}>
+                    "{quoteData.content}"
+                  </p>
+                  <p style={{ marginTop: '20px', color: theme.accent, fontWeight: 700, textAlign: 'right' }}>
+                    — PROTOCAL {quoteData.author.toUpperCase()}
+                  </p>
+                </div>
+              ) : <div className="dim-text">Generating daily heuristic...</div>}
+            </PremiumCard>
+
+            {/* Quick Actions */}
+            <div style={{ gridColumn: 'span 3', marginTop: '12px' }}>
+              <SectionHeader title="Development Protocols" desc="Access advanced tooling and deployment routines." />
+              <div style={{ display: 'flex', gap: '16px' }}>
+                {['System Scan', 'Node Reboot', 'Deploy V3', 'Security Audit'].map(action => (
+                  <button 
+                    key={action} 
+                    className="btn-action" 
+                    style={{ flex: 1, padding: '16px', borderRadius: '16px', fontSize: '0.9rem', fontWeight: 600 }}
+                    onClick={() => {
+                      confetti({
+                        particleCount: 150,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#6366f1', '#10b981']
+                      });
+                      alert(`${action} protocol initiated successfully.`);
+                    }}
+                  >
+                    {action}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
+        )}
 
-        </div>
+        {activeTab !== 'dashboard' && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center' }}>
+            <SectionHeader title={`${activeTab.toUpperCase()} PROTOCOL`} desc="Sub-system interface under initialization." />
+            <div className="premium-card" style={{ padding: '40px', maxWidth: '500px' }}>
+              <Activity size={48} color={theme.accent} style={{ marginBottom: '20px' }} />
+              <p>The <strong>{activeTab}</strong> module is currently in read-only mode during V2 synchronization. Operational controls will be established in the next patch.</p>
+              <button className="btn-action" onClick={() => setActiveTab('dashboard')}>Return to Command Center</button>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
